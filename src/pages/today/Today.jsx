@@ -70,15 +70,11 @@ const Today = () => {
   // Initialize state for each input
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
-  const [dateTime, setDateTime] = useState("");
 
   // Function to handle input changes
   const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
   };
-
-  // Determine if all inputs are filled
-  const allInputsFilled = taskName && description && dateTime;
 
   // Use the custom hook to manage persistent tasks
   const [tasks, setTasks] = usePersistentTasks();
@@ -90,7 +86,6 @@ const Today = () => {
       id: generateTaskId(), // Generate a unique ID for the task
       name: taskName,
       description: description,
-      dateTime: dateTime,
     };
 
     // Add the new task to the tasks state by creating a new array
@@ -99,7 +94,6 @@ const Today = () => {
     // Clear the input fields
     setTaskName("");
     setDescription("");
-    setDateTime("");
 
     // Close the add task overlay
     setAdd(false);
@@ -152,7 +146,7 @@ const Today = () => {
         <div
           className={`${
             add ? "flex flex-col" : "hidden"
-          } enter flex w-full h-[270px] px-3 rounded-t-[10px] shadow-lg z-[200] bottom-0 bg-white fixed m-0 justify-start items-start p-0`}
+          } enter flex w-full h-[220px] px-3 rounded-t-[10px] shadow-lg z-[200] bottom-0 bg-white fixed m-0 justify-start items-start p-0`}
         >
           {/* Input area */}
           {/* Task Name */}
@@ -173,27 +167,13 @@ const Today = () => {
             onChange={handleInputChange(setDescription)}
           />
 
-            <p className=" mt-3 ml-2 text-slate-500 " >
-              Date and Time 
-            </p>
-          {/* Date and Time */}
-          <input
-            type="datetime-local"
-            name=""
-            id=""
-            placeholder="Date, Time"
-            className=" outline-none  border-[1px] rounded-lg px-[10px] ml-2 text-xl font-thin mt-2"
-            value={dateTime}
-            onChange={handleInputChange(setDateTime)}
-          />
-
           <div className="w-full flex justify-end px-[1rem] mt-[2rem]">
             {/* Button */}
             <button
               className={`bg-${
-                !taskName || !dateTime ? "slate-300" : "red-500"
-              } p-3 rounded-full h-[45px] font-bold shadow-lg  text-xl text-white w-[45px] items-center justify-center`}
-              disabled={!taskName || !dateTime}
+                !taskName ? "slate-300" : "red-500"
+              } p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center`}
+              disabled={!taskName}
               onClick={addNewTask}
             >
               <i className="fa-solid fa-arrow-up"></i>
@@ -227,7 +207,7 @@ const Today = () => {
 
               {/* Task details */}
               <p>{task.description}</p>
-              <p className="text-[12px] font-thin">{task.dateTime}</p>
+             
 
               {/* Delete button */}
               <div className="flex justify-end">
