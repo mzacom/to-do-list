@@ -2,40 +2,49 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const usePersistentTasks = () => {
-  const [tasks, setTasks] = useState([]);
+ const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
+ useEffect(() => {
     const storedTasks = localStorage.getItem("tasks");
     if (storedTasks) {
       setTasks(JSON.parse(storedTasks));
     }
-  }, []);
+ }, []);
 
-  useEffect(() => {
+ useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+ }, [tasks]);
 
-  return [tasks, setTasks];
+ return [tasks, setTasks];
 };
 
 const generateTaskId = () => {
-  return Math.random().toString(36).substr(2, 9);
+ return Math.random().toString(36).substr(2, 9);
 };
 
 const Clock = ({ time }) => {
-  const formattedTime = () => {
+ const formattedTime = () => {
     const hours = time.getHours() % 12 || 12;
     const minutes = time.getMinutes().toString().padStart(2, "0");
     const ampm = time.getHours() >= 12 ? "PM" : "AM";
     return `${hours}:${minutes} ${ampm}`;
-  };
+ };
 
-  return <div className="text-sm text-gray-500">{formattedTime()}</div>;
+ return <div className="text-sm text-gray-500">{formattedTime()}</div>;
 };
 
 const Today = () => {
-  const current = new Date();
-  const months = [
+ const [currentTime, setCurrentTime] = useState(new Date());
+
+ useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+ }, []);
+
+ const months = [
     "Jan",
     "Feb",
     "Mar",
@@ -48,9 +57,9 @@ const Today = () => {
     "Oct",
     "Nov",
     "Dec",
-  ];
+ ];
 
-  const days = [
+ const days = [
     "Sunday",
     "Monday",
     "Tuesday",
@@ -58,104 +67,79 @@ const Today = () => {
     "Thursday",
     "Friday",
     "Saturday",
-  ];
+ ];
 
-  const monthReal = current.getMonth();
-  const dayReal = current.getDay();
+ const monthReal = currentTime.getMonth();
+ const dayReal = currentTime.getDay();
 
-  const printMonth = months[monthReal];
-  const printDay = days[dayReal];
+ const printMonth = months[monthReal];
+ const printDay = days[dayReal];
 
-  // overlay and add task button
-  const [add, setAdd] = useState(false);
+ const [add, setAdd] = useState(false);
+ const [bounce, setBounce] = useState(false);
 
-  // State to control the bounce animation
-  const [bounce, setBounce] = useState(false);
-
-  const addTask = function () {
+ const addTask = function () {
     setAdd(true);
-    setBounce(true); // Start the bounce animation
+    setBounce(true);
     setTimeout(() => setBounce(false), 500);
-  };
+ };
 
-  // Initialize state for each input
-  const [taskName, setTaskName] = useState("");
-  const [description, setDescription] = useState("");
+ const [taskName, setTaskName] = useState("");
+ const [description, setDescription] = useState("");
 
-  // Function to handle input changes
-  const handleInputChange = (setter) => (event) => {
+ const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
-  };
+ };
 
-  // Use the custom hook to manage persistent tasks
-  const [tasks, setTasks] = usePersistentTasks();
+ const [tasks, setTasks] = usePersistentTasks();
 
-  // Function to add a new task
-  const addNewTask = () => {
-    // Create a new task object
+ const addNewTask = () => {
     const newTask = {
-      id: generateTaskId(), // Generate a unique ID for the task
+      id: generateTaskId(),
       name: taskName,
       description: description,
-      time: new Date().getTime(), // Record the time when the task is added
+      time: new Date().getTime(),
     };
 
-    // Add the new task to the tasks state by creating a new array
     setTasks((prevTasks) => [...prevTasks, newTask]);
-
-    // Clear the input fields
     setTaskName("");
     setDescription("");
-
-    // Close the add task overlay
     setAdd(false);
-  };
+ };
 
-  // Function to delete a task after 6 seconds
-  const deleteTaskAfterDelay = (id) => {
+ const deleteTaskAfterDelay = (id) => {
     setTimeout(() => {
       const updatedTasks = tasks.filter((task) => task.id !== id);
       setTasks(updatedTasks);
-    }, 6000); // 6 seconds delay
-  };
+    }, 3000);
+ };
 
-  // Function to handle task completion
-  const handleTaskCompletion = (id) => {
+ const handleTaskCompletion = (id) => {
     const updatedTasks = tasks.map((task) =>
       task.id === id ? { ...task, completed: true } : task
     );
     setTasks(updatedTasks);
     deleteTaskAfterDelay(id);
-  };
+ };
 
-  return (
+ return (
     <>
       <section className="relative flex flex-col w-full mx-auto my-3">
-        {/* Today */}
         <div className="w-full flex text-2xl justify-center font-bold items-center">
           <p className="">Today</p>
           <i className="fa-solid fa-calendar-week flex absolute right-[20px] text-red-500"></i>
         </div>
 
-       
-
-        {/* month and day */}
-        <div className="px-[20px] items-center justify-between  text-black flex gap-1 mt-3">
-
-
+        <div className="px-[20px] items-center justify-between text-black flex gap-1 mt-3">
           <div>
-          <span>{printMonth}</span>.<span> {printDay} </span>
-
+            <span>{printMonth}</span>.<span> {printDay} </span>
           </div>
-          
 
-           {/* Digital Clock */}
-        <div className=" text-black fo  ">
-          <Clock time={current} />
-        </div>
+          <div className="text-black fo">
+            <Clock time={currentTime} />
+          </div>
         </div>
 
-        {/* add task And display area. */}
         <div
           className={`${
             bounce ? "bounce" : ""
@@ -168,8 +152,6 @@ const Today = () => {
           </div>
         </div>
 
-        {/* inputation */}
-        {/* overlay */}
         <div
           className={`${
             add ? "flex" : "hidden"
@@ -182,8 +164,6 @@ const Today = () => {
             add ? "flex flex-col" : "hidden"
           } enter flex w-full h-[220px] px-3 rounded-t-[10px] shadow-lg z-[200] bottom-0 bg-white fixed m-0 justify-start items-start p-0`}
         >
-          {/* Input area */}
-          {/* Task Name */}
           <input
             type="text"
             placeholder="Task Name"
@@ -192,7 +172,6 @@ const Today = () => {
             onChange={handleInputChange(setTaskName)}
           />
 
-          {/* Description */}
           <input
             type="text"
             placeholder="Description"
@@ -202,7 +181,6 @@ const Today = () => {
           />
 
           <div className="w-full flex justify-end px-[1rem] mt-[2rem]">
-            {/* Button */}
             <button
               style={{ backgroundColor: !taskName ? "#dee3e0" : "#EF4444" }}
               className="p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center"
@@ -215,25 +193,23 @@ const Today = () => {
         </div>
       </section>
 
-      {/* Render the tasks */}
-      <div className="flex-col mt-7 w-full justify-center flex items-start  task-list">
+      <div className="flex-col mt-7 w-full justify-center flex items-start task-list">
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
             <div
-              className="task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col"
+              className="task-item rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col"
               style={{ boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
             >
-              {/* Task details */}
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col  items-start ">
                 <div>
-                  <div className="checkbox-wrapper-15">
+                 <div className="checkbox-wrapper-15">
                     <input
                       className="inp-cbx"
-                      id={`cbx-${task.id}`} // Unique ID for each checkbox
+                      id={`cbx-${task.id}`}
                       type="checkbox"
                       style={{ display: "none" }}
-                      checked={task.completed} // Bind to task.completed to reflect completion state
-                      onChange={() => handleTaskCompletion(task.id)} // Handle task completion
+                      checked={task.completed}
+                      onChange={() => handleTaskCompletion(task.id)}
                     />
                     <label className="cbx" htmlFor={`cbx-${task.id}`}>
                       <span>
@@ -241,24 +217,23 @@ const Today = () => {
                           <polyline points="1 5 4 8 11 1"></polyline>
                         </svg>
                       </span>
-                      <span className="text-xl">{task.name}</span>{" "}
-                      {/* Display task name as the checkbox label */}
+                      <span className="text-xl">{task.name}</span>
                     </label>
-                  </div>
-                  <p>{task.description}</p>
+                 </div>
+
+                 <p>{task.description}</p>
                 </div>
-                <div>
-                  <Clock time={new Date(task.time)} />
+                <div className=" ml-[1.7rem] " >
+                 <Clock time={new Date(task.time)} />
                 </div>
               </div>
             </div>
-            {/* Add a horizontal rule after each task except the last one */}
             {index < tasks.length - 1 && <hr />}
           </React.Fragment>
         ))}
       </div>
     </>
-  );
+ );
 };
 
 export default Today;
