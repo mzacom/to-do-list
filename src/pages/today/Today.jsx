@@ -227,9 +227,9 @@ const Today = () => {
                     </label>
                  </div>
 
-                 <p>{task.description}</p>
+                 <p className=" ml-[1.9rem] text-[13px] font-thin" >{task.description}</p>
                 </div>
-                <div className=" ml-[1.7rem] " >
+                <div className="  ml-[1.9rem] " >
                  <Clock time={new Date(task.time)} />
                 </div>
               </div>
