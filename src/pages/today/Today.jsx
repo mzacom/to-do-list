@@ -170,9 +170,8 @@ const Today = () => {
           <div className="w-full flex justify-end px-[1rem] mt-[2rem]">
             {/* Button */}
             <button
-              className={`bg-${
-                !taskName ? "slate-300" : "red-500"
-              } p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center`}
+              style={{ backgroundColor: !taskName ? "#6B7280" : "#EF4444" }}
+              className="p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center"
               disabled={!taskName}
               onClick={addNewTask}
             >
@@ -186,36 +185,39 @@ const Today = () => {
       <div className="flex-col mt-7 w-full justify-center flex items-start  task-list">
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
-            <div className="task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col" style={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
+            <div
+              className="task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col"
+              style={{ boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
+            >
               {/* To-do checkbox */}
               <div className="checkbox-wrapper-15">
                 <input
-                 className="inp-cbx"
-                 id={`cbx-${task.id}`} // Unique ID for each checkbox
-                 type="checkbox"
-                 style={{ display: "none" }}
+                  className="inp-cbx"
+                  id={`cbx-${task.id}`} // Unique ID for each checkbox
+                  type="checkbox"
+                  style={{ display: "none" }}
                 />
                 <label className="cbx" htmlFor={`cbx-${task.id}`}>
-                 <span>
+                  <span>
                     <svg width="12px" height="9px" viewBox="0 0 12 9">
                       <polyline points="1 5 4 8 11 1"></polyline>
                     </svg>
-                 </span>
-                 <span className="text-xl">{task.name}</span> {/* Display task name as the checkbox label */}
+                  </span>
+                  <span className="text-xl">{task.name}</span>{" "}
+                  {/* Display task name as the checkbox label */}
                 </label>
               </div>
 
               {/* Task details */}
               <p>{task.description}</p>
-             
 
               {/* Delete button */}
               <div className="flex justify-end">
                 <button
-                 className="bg-red-500 flex items-center justify-center h-[22px] w-[20px] text-white px-3 py-1 rounded-md"
-                 onClick={() => deleteTask(task.id)}
+                  className="bg-red-500 flex items-center justify-center h-[22px] w-[20px] text-white px-3 py-1 rounded-md"
+                  onClick={() => deleteTask(task.id)}
                 >
-                 <i className="fa-solid text-[12px] p-1 fa-trash"></i>
+                  <i className="fa-solid text-[12px] p-1 fa-trash"></i>
                 </button>
               </div>
             </div>
