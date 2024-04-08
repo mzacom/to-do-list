@@ -86,6 +86,7 @@ const Today = () => {
       id: generateTaskId(), // Generate a unique ID for the task
       name: taskName,
       description: description,
+      completed: false, // Add a completed flag for the task
     };
 
     // Add the new task to the tasks state by creating a new array
@@ -99,12 +100,21 @@ const Today = () => {
     setAdd(false);
   };
 
-  // Function to delete a task
-  const deleteTask = (id) => {
-    // Filter out the task with the specified ID
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    // Update the tasks state
+  // Function to delete a task after 6 seconds
+  const deleteTaskAfterDelay = (id) => {
+    setTimeout(() => {
+      const updatedTasks = tasks.filter((task) => task.id !== id);
+      setTasks(updatedTasks);
+    }, 6000); // 6 seconds delay
+  };
+
+  // Function to handle task completion
+  const handleTaskCompletion = (id) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, completed: true } : task
+    );
     setTasks(updatedTasks);
+    deleteTaskAfterDelay(id);
   };
 
   return (
@@ -186,7 +196,7 @@ const Today = () => {
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
             <div
-              className="task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col"
+              className={`task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col`}
               style={{ boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
             >
               {/* To-do checkbox */}
@@ -196,6 +206,8 @@ const Today = () => {
                   id={`cbx-${task.id}`} // Unique ID for each checkbox
                   type="checkbox"
                   style={{ display: "none" }}
+                  checked={task.completed}
+                  onChange={() => handleTaskCompletion(task.id)}
                 />
                 <label className="cbx" htmlFor={`cbx-${task.id}`}>
                   <span>
@@ -210,16 +222,6 @@ const Today = () => {
 
               {/* Task details */}
               <p>{task.description}</p>
-
-              {/* Delete button */}
-              <div className="flex justify-end">
-                <button
-                  className="bg-red-500 flex items-center justify-center h-[22px] w-[20px] text-white px-3 py-1 rounded-md"
-                  onClick={() => deleteTask(task.id)}
-                >
-                  <i className="fa-solid text-[12px] p-1 fa-trash"></i>
-                </button>
-              </div>
             </div>
             {/* Add a horizontal rule after each task except the last one */}
             {index < tasks.length - 1 && <hr />}
