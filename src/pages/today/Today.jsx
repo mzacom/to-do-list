@@ -2,49 +2,49 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const usePersistentTasks = () => {
- const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
- useEffect(() => {
+  useEffect(() => {
     const storedTasks = localStorage.getItem("tasks");
     if (storedTasks) {
       setTasks(JSON.parse(storedTasks));
     }
- }, []);
+  }, []);
 
- useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
- }, [tasks]);
+  }, [tasks]);
 
- return [tasks, setTasks];
+  return [tasks, setTasks];
 };
 
 const generateTaskId = () => {
- return Math.random().toString(36).substr(2, 9);
+  return Math.random().toString(36).substr(2, 9);
 };
 
 const Clock = ({ time }) => {
- const formattedTime = () => {
+  const formattedTime = () => {
     const hours = time.getHours() % 12 || 12;
     const minutes = time.getMinutes().toString().padStart(2, "0");
     const ampm = time.getHours() >= 12 ? "PM" : "AM";
     return `${hours}:${minutes} ${ampm}`;
- };
+  };
 
- return <div className="text-sm text-gray-500">{formattedTime()}</div>;
+  return <div className="text-sm text-gray-500">{formattedTime()}</div>;
 };
 
 const Today = () => {
- const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
 
- useEffect(() => {
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
- }, []);
+  }, []);
 
- const months = [
+  const months = [
     "Jan",
     "Feb",
     "Mar",
@@ -57,9 +57,9 @@ const Today = () => {
     "Oct",
     "Nov",
     "Dec",
- ];
+  ];
 
- const days = [
+  const days = [
     "Sunday",
     "Monday",
     "Tuesday",
@@ -67,38 +67,40 @@ const Today = () => {
     "Thursday",
     "Friday",
     "Saturday",
- ];
+  ];
 
- const monthReal = currentTime.getMonth();
- const dayReal = currentTime.getDay();
+  const monthReal = currentTime.getMonth();
+  const dayReal = currentTime.getDay();
 
- const printMonth = `${months[monthReal]} ${currentTime.getDate()}, ${days[dayReal]}`;
+  const printMonth = `${months[monthReal]} ${currentTime.getDate()}, ${
+    days[dayReal]
+  }`;
 
- const [add, setAdd] = useState(false);
- const [bounce, setBounce] = useState(false);
- const taskNameInputRef = useRef(null); // Ref for Task Name input
+  const [add, setAdd] = useState(false);
+  const [bounce, setBounce] = useState(false);
+  const taskNameInputRef = useRef(null); // Ref for Task Name input
 
- const addTask = function () {
+  const addTask = function () {
     setAdd(true);
     setBounce(true);
     setTimeout(() => {
-        setBounce(false);
-        if (taskNameInputRef.current) {
-            taskNameInputRef.current.focus(); // Focus on Task Name input
-        }
+      setBounce(false);
+      if (taskNameInputRef.current) {
+        taskNameInputRef.current.focus(); // Focus on Task Name input
+      }
     }, 500);
- };
+  };
 
- const [taskName, setTaskName] = useState("");
- const [description, setDescription] = useState("");
+  const [taskName, setTaskName] = useState("");
+  const [description, setDescription] = useState("");
 
- const handleInputChange = (setter) => (event) => {
+  const handleInputChange = (setter) => (event) => {
     setter(event.target.value);
- };
+  };
 
- const [tasks, setTasks] = usePersistentTasks();
+  const [tasks, setTasks] = usePersistentTasks();
 
- const addNewTask = () => {
+  const addNewTask = () => {
     const newTask = {
       id: generateTaskId(),
       name: taskName,
@@ -110,24 +112,24 @@ const Today = () => {
     setTaskName("");
     setDescription("");
     setAdd(false);
- };
+  };
 
- const deleteTaskAfterDelay = (id) => {
+  const deleteTaskAfterDelay = (id) => {
     setTimeout(() => {
       const updatedTasks = tasks.filter((task) => task.id !== id);
       setTasks(updatedTasks);
     }, 3000);
- };
+  };
 
- const handleTaskCompletion = (id) => {
+  const handleTaskCompletion = (id) => {
     const updatedTasks = tasks.map((task) =>
       task.id === id ? { ...task, completed: true } : task
     );
     setTasks(updatedTasks);
     deleteTaskAfterDelay(id);
- };
+  };
 
- return (
+  return (
     <>
       <section className="relative flex flex-col w-full mx-auto my-3">
         <div className="w-full flex text-2xl justify-center font-bold items-center">
@@ -208,7 +210,7 @@ const Today = () => {
             >
               <div className="flex flex-col  items-start ">
                 <div>
-                 <div className="checkbox-wrapper-15">
+                  <div className="checkbox-wrapper-15">
                     <input
                       className="inp-cbx"
                       id={`cbx-${task.id}`}
@@ -225,12 +227,15 @@ const Today = () => {
                       </span>
                       <span className="text-xl">{task.name}</span>
                     </label>
-                 </div>
+                  </div>
 
-                 <p className=" ml-[1.9rem] text-[13px] font-thin" >{task.description}</p>
+                  <p className=" ml-[1.9rem] text-[13px] font-thin">
+                    {task.description}
+                  </p>
                 </div>
-                <div className="  ml-[1.9rem] " >
-                 <Clock time={new Date(task.time)} />
+                
+                <div className="  ml-[1.9rem] ">
+                  <Clock time={new Date(task.time)} />
                 </div>
               </div>
             </div>
@@ -239,7 +244,7 @@ const Today = () => {
         ))}
       </div>
     </>
- );
+  );
 };
 
 export default Today;
