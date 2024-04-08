@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const usePersistentTasks = () => {
@@ -77,11 +77,17 @@ const Today = () => {
 
  const [add, setAdd] = useState(false);
  const [bounce, setBounce] = useState(false);
+ const taskNameInputRef = useRef(null); // Ref for Task Name input
 
  const addTask = function () {
     setAdd(true);
     setBounce(true);
-    setTimeout(() => setBounce(false), 500);
+    setTimeout(() => {
+        setBounce(false);
+        if (taskNameInputRef.current) {
+            taskNameInputRef.current.focus(); // Focus on Task Name input
+        }
+    }, 500);
  };
 
  const [taskName, setTaskName] = useState("");
@@ -167,9 +173,10 @@ const Today = () => {
           <input
             type="text"
             placeholder="Task Name"
-            className="font-bold mt-3 w-full outline-none border-none pl-2 text-xl h-[50px]"
+            className=" font-semibold mt-3 w-full outline-none border-none pl-2 text-xl h-[50px]"
             value={taskName}
             onChange={handleInputChange(setTaskName)}
+            ref={taskNameInputRef} // Assign the ref to Task Name input
           />
 
           <input
