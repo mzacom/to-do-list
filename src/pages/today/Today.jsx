@@ -152,7 +152,7 @@ const Today = () => {
         <div
           className={`${
             add ? "flex flex-col" : "hidden"
-          } enter flex w-full h-[240px] rounded-t-[10px] shadow-lg z-[200] bottom-0 bg-white fixed m-0 justify-start items-start p-0`}
+          } enter flex w-full h-[270px] px-3 rounded-t-[10px] shadow-lg z-[200] bottom-0 bg-white fixed m-0 justify-start items-start p-0`}
         >
           {/* Input area */}
           {/* Task Name */}
@@ -173,13 +173,16 @@ const Today = () => {
             onChange={handleInputChange(setDescription)}
           />
 
+            <p className=" mt-3 ml-2 text-slate-500 " >
+              Date and Time 
+            </p>
           {/* Date and Time */}
           <input
             type="datetime-local"
             name=""
             id=""
             placeholder="Date, Time"
-            className=" outline-none px-[10px] text-xl font-thin mt-2"
+            className=" outline-none  border-[1px] rounded-lg px-[10px] ml-2 text-xl font-thin mt-2"
             value={dateTime}
             onChange={handleInputChange(setDateTime)}
           />
@@ -188,8 +191,8 @@ const Today = () => {
             {/* Button */}
             <button
               className={`bg-${
-                !taskName || !dateTime ? "bg-slate-300" : "red-500"
-              } p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center`}
+                !taskName || !dateTime ? "slate-300" : "red-500"
+              } p-3 rounded-full h-[45px] font-bold shadow-lg  text-xl text-white w-[45px] items-center justify-center`}
               disabled={!taskName || !dateTime}
               onClick={addNewTask}
             >
