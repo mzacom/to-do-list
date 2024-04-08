@@ -179,7 +179,7 @@ const Today = () => {
             name=""
             id=""
             placeholder="Date, Time"
-            className=" bg-white outline-none px-[10px] text-xl font-thin mt-2"
+            className=" outline-none px-[10px] text-xl font-thin mt-2"
             value={dateTime}
             onChange={handleInputChange(setDateTime)}
           />
