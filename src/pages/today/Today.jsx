@@ -72,8 +72,7 @@ const Today = () => {
  const monthReal = currentTime.getMonth();
  const dayReal = currentTime.getDay();
 
- const printMonth = months[monthReal];
- const printDay = days[dayReal];
+ const printMonth = `${months[monthReal]} ${currentTime.getDate()}, ${days[dayReal]}`;
 
  const [add, setAdd] = useState(false);
  const [bounce, setBounce] = useState(false);
@@ -138,7 +137,7 @@ const Today = () => {
 
         <div className="px-[20px] items-center justify-between text-black flex gap-1 mt-3">
           <div>
-            <span>{printMonth}</span>.<span> {printDay} </span>
+            <span>{printMonth}</span>
           </div>
 
           <div className="text-black fo">
