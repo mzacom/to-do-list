@@ -170,7 +170,7 @@ const Today = () => {
           <div className="w-full flex justify-end px-[1rem] mt-[2rem]">
             {/* Button */}
             <button
-              style={{ backgroundColor: !taskName ? "#6B7280" : "#EF4444" }}
+              style={{ backgroundColor: !taskName ? "#dee3e0" : "#EF4444" }}
               className="p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center"
               disabled={!taskName}
               onClick={addNewTask}
