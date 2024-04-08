@@ -188,7 +188,7 @@ const Today = () => {
             {/* Button */}
             <button
               className={`bg-${
-                !taskName || !dateTime ? "slate-300" : "red-500"
+                !taskName || !dateTime ? "bg-slate-300" : "red-500"
               } p-3 rounded-full h-[45px] font-bold shadow-lg text-xl text-white w-[45px] items-center justify-center`}
               disabled={!taskName || !dateTime}
               onClick={addNewTask}
