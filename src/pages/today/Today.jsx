@@ -178,7 +178,8 @@ const Today = () => {
             type="datetime-local"
             name=""
             id=""
-            className="outline-none px-[10px] text-xl font-thin mt-2"
+            placeholder="Date, Time"
+            className=" bg-white outline-none px-[10px] text-xl font-thin mt-2"
             value={dateTime}
             onChange={handleInputChange(setDateTime)}
           />
