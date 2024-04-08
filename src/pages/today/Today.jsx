@@ -22,6 +22,17 @@ const generateTaskId = () => {
   return Math.random().toString(36).substr(2, 9);
 };
 
+const Clock = ({ time }) => {
+  const formattedTime = () => {
+    const hours = time.getHours() % 12 || 12;
+    const minutes = time.getMinutes().toString().padStart(2, "0");
+    const ampm = time.getHours() >= 12 ? "PM" : "AM";
+    return `${hours}:${minutes} ${ampm}`;
+  };
+
+  return <div className="text-sm text-gray-500">{formattedTime()}</div>;
+};
+
 const Today = () => {
   const current = new Date();
   const months = [
@@ -86,7 +97,7 @@ const Today = () => {
       id: generateTaskId(), // Generate a unique ID for the task
       name: taskName,
       description: description,
-      completed: false, // Add a completed flag for the task
+      time: new Date().getTime(), // Record the time when the task is added
     };
 
     // Add the new task to the tasks state by creating a new array
@@ -119,16 +130,29 @@ const Today = () => {
 
   return (
     <>
-      <section className="flex flex-col w-full mx-auto my-3">
+      <section className="relative flex flex-col w-full mx-auto my-3">
         {/* Today */}
         <div className="w-full flex text-2xl justify-center font-bold items-center">
           <p className="">Today</p>
           <i className="fa-solid fa-calendar-week flex absolute right-[20px] text-red-500"></i>
         </div>
 
+       
+
         {/* month and day */}
-        <div className="px-[20px] text-black flex gap-1 mt-3">
+        <div className="px-[20px] items-center justify-between  text-black flex gap-1 mt-3">
+
+
+          <div>
           <span>{printMonth}</span>.<span> {printDay} </span>
+
+          </div>
+          
+
+           {/* Digital Clock */}
+        <div className=" text-black fo  ">
+          <Clock time={current} />
+        </div>
         </div>
 
         {/* add task And display area. */}
@@ -196,32 +220,37 @@ const Today = () => {
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
             <div
-              className={`task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col`}
+              className="task-item  rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col"
               style={{ boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
             >
-              {/* To-do checkbox */}
-              <div className="checkbox-wrapper-15">
-                <input
-                  className="inp-cbx"
-                  id={`cbx-${task.id}`} // Unique ID for each checkbox
-                  type="checkbox"
-                  style={{ display: "none" }}
-                  checked={task.completed}
-                  onChange={() => handleTaskCompletion(task.id)}
-                />
-                <label className="cbx" htmlFor={`cbx-${task.id}`}>
-                  <span>
-                    <svg width="12px" height="9px" viewBox="0 0 12 9">
-                      <polyline points="1 5 4 8 11 1"></polyline>
-                    </svg>
-                  </span>
-                  <span className="text-xl">{task.name}</span>{" "}
-                  {/* Display task name as the checkbox label */}
-                </label>
-              </div>
-
               {/* Task details */}
-              <p>{task.description}</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <div className="checkbox-wrapper-15">
+                    <input
+                      className="inp-cbx"
+                      id={`cbx-${task.id}`} // Unique ID for each checkbox
+                      type="checkbox"
+                      style={{ display: "none" }}
+                      checked={task.completed} // Bind to task.completed to reflect completion state
+                      onChange={() => handleTaskCompletion(task.id)} // Handle task completion
+                    />
+                    <label className="cbx" htmlFor={`cbx-${task.id}`}>
+                      <span>
+                        <svg width="12px" height="9px" viewBox="0 0 12 9">
+                          <polyline points="1 5 4 8 11 1"></polyline>
+                        </svg>
+                      </span>
+                      <span className="text-xl">{task.name}</span>{" "}
+                      {/* Display task name as the checkbox label */}
+                    </label>
+                  </div>
+                  <p>{task.description}</p>
+                </div>
+                <div>
+                  <Clock time={new Date(task.time)} />
+                </div>
+              </div>
             </div>
             {/* Add a horizontal rule after each task except the last one */}
             {index < tasks.length - 1 && <hr />}
