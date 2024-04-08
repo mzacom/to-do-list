@@ -129,6 +129,12 @@ const Today = () => {
     deleteTaskAfterDelay(id);
   };
 
+  useEffect(() => {
+    if (add && taskNameInputRef.current) {
+      taskNameInputRef.current.focus(); // Focus on Task Name input when 'add' state changes to true
+    }
+  }, [add]);
+
   return (
     <>
       <section className="relative flex flex-col w-full mx-auto my-3">
@@ -233,7 +239,7 @@ const Today = () => {
                     {task.description}
                   </p>
                 </div>
-                
+
                 <div className="  ml-[1.9rem] ">
                   <Clock time={new Date(task.time)} />
                 </div>
