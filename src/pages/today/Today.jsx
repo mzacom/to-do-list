@@ -204,7 +204,7 @@ const Today = () => {
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
             <div
-              className="task-item rounded-lg p-3 w-[90%] gap-2 my-[10px] mx-[20px] flex flex-col"
+              className="task-item rounded-lg p-3 w-[90%]  gap-2 mx-auto my-[10px] flex flex-col"
               style={{ boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)" }}
             >
               <div className="flex flex-col  items-start ">
