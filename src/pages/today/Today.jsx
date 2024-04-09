@@ -177,10 +177,14 @@ const Today = () => {
             !openMode ? " hidden " : " flex "
           } w-full justify-end fixed `}
         >
-          <div className="w-[150px] blury2  cursor-pointer z-[900] h-[140px] bg-none mr-[1rem] mt-[2rem] justify-center flex flex-col items-center gap-3 rounded-lg shadow-lg">
-            <p onClick={() => changeMode("light")}>Light Mode</p>
+          <div className="w-[150px] blury2 cursor-pointer z-[10000] h-[140px] bg-none mr-[1rem] mt-[2rem] justify-center flex flex-col items-center gap-3 rounded-lg shadow-lg">
+            <button className="  z-[10000]" onClick={() => changeMode("light")}>
+              Light Mode
+            </button>
             <div className="h-[0.2px] w-full bg-slate-500"></div>
-            <p onClick={() => changeMode("dark")}>Dark Mode</p>
+            <p className="  z-[10000]" onClick={() => changeMode("dark")}>
+              Dark Mode
+            </p>
             <div className="h-[0.2px] w-full bg-slate-500"></div>
             <p onClick={() => changeMode("system")}>System Default</p>
           </div>
