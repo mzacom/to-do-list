@@ -35,6 +35,9 @@ const Clock = ({ time }) => {
 
 const Today = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [mode, setMode] = useState("light"); // Default mode is light
+
+  // Function to handle mode chang
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -44,37 +47,45 @@ const Today = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  useEffect(() => {
+    const prefersDarkMode =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setMode(prefersDarkMode ? "dark" : "light");
+  }, []);
 
-  const days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  const monthReal = currentTime.getMonth();
-  const dayReal = currentTime.getDay();
-
-  const printMonth = `${months[monthReal]} ${currentTime.getDate()}, ${
-    days[dayReal]
-  }`;
+  // Define printMonth here
+  const printMonth = () => {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const days = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const monthReal = currentTime.getMonth();
+    const dayReal = currentTime.getDay();
+    return `${months[monthReal]} ${currentTime.getDate()}, ${days[dayReal]}`;
+  };
+  const changeMode = (newMode) => {
+    setMode(newMode);
+  };
 
   const [add, setAdd] = useState(false);
   const [bounce, setBounce] = useState(false);
@@ -135,12 +146,19 @@ const Today = () => {
     }
   }, [add]);
 
+  const [openMode, setOpenMode] = useState(false);
+
   return (
     <>
       <section className="relative flex flex-col w-full mx-auto my-3">
         <div className="w-full flex text-2xl justify-center font-bold items-center">
           <p className="">Today</p>
-          <i className="fa-solid fa-calendar-week flex absolute right-[20px] text-red-500"></i>
+          <i
+            className={`fa-solid ${
+              openMode ? " fa-xmark" : "fa-ellipsis"
+            } z-[800] flex absolute right-[20px] text-red-500`}
+            onClick={() => setOpenMode((prevOpenMode) => !prevOpenMode)}
+          ></i>
         </div>
 
         <div className="px-[20px] items-center justify-between text-black flex gap-1 mt-3">
@@ -150,6 +168,21 @@ const Today = () => {
 
           <div className="text-black fo">
             <Clock time={currentTime} />
+          </div>
+        </div>
+
+        {/* Modes */}
+        <div
+          className={` ${
+            !openMode ? " hidden " : " flex "
+          } w-full justify-end fixed `}
+        >
+          <div className="w-[150px] blury2  cursor-pointer z-[900] h-[140px] bg-none mr-[1rem] mt-[2rem] justify-center flex flex-col items-center gap-3 rounded-lg shadow-lg">
+            <p onClick={() => changeMode("light")}>Light Mode</p>
+            <div className="h-[0.2px] w-full bg-slate-500"></div>
+            <p onClick={() => changeMode("dark")}>Dark Mode</p>
+            <div className="h-[0.2px] w-full bg-slate-500"></div>
+            <p onClick={() => changeMode("system")}>System Default</p>
           </div>
         </div>
 
@@ -207,7 +240,11 @@ const Today = () => {
         </div>
       </section>
 
-      <div className="flex-col mt-7 w-full justify-center flex items-start task-list">
+      <div
+        className={`flex-col mt-7 w-full justify-center flex items-start task-list ${
+          mode === "dark" ? "dark" : ""
+        }`}
+      >
         {tasks.map((task, index) => (
           <React.Fragment key={task.id}>
             <div

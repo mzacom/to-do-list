@@ -189,3 +189,14 @@
     transform: scale(1.2);
   }
 }
+
+.blury {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+.blury2 {
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  background: rgba(251, 251, 251, 0.189);
+  
+}
